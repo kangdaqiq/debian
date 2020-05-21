@@ -61,19 +61,9 @@ echo "<h3><center>You Can Also Contact Me at <a href="https://www.facebook.com/D
 wget -O /etc/nginx/conf.d/vps.conf "https://raw.githubusercontent.com/Dreyannz/AutoScriptVPS/master/Files/Nginx/vps.conf"
 service nginx restart
 
-
-# Setting USW
-apt-get install ufw
-ufw allow ssh
-ufw allow 1194/tcp
-sed -i 's|DEFAULT_INPUT_POLICY="DROP"|DEFAULT_INPUT_POLICY="ACCEPT"|' /etc/default/ufw
-sed -i 's|DEFAULT_FORWARD_POLICY="DROP"|DEFAULT_FORWARD_POLICY="ACCEPT"|' /etc/default/ufw
-cd /etc/ufw/
-wget "https://raw.githubusercontent.com/Dreyannz/AutoScriptVPS/master/Files/OpenVPN/before.rules"
-cd
-ufw enable
-ufw status
-ufw disable
+# ovpn
+wget https://git.io/vpn -O openvpn-install.sh
+bash openvpn-install.sh
 
 # set ipv4 forward
 echo 1 > /proc/sys/net/ipv4/ip_forward
@@ -85,9 +75,9 @@ wget -O /usr/bin/badvpn-udpgw "https://github.com/Dreyannz/AutoScriptVPS/raw/mas
 if [ "$OS" == "x86_64" ]; then
   wget -O /usr/bin/badvpn-udpgw "https://github.com/Dreyannz/AutoScriptVPS/raw/master/Files/BadVPN/badvpn-udpgw64"
 fi
-sed -i '$ i\screen -AmdS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300' /etc/rc.local
+sed -i '$ i\screen -AmdS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7200' /etc/rc.local
 chmod +x /usr/bin/badvpn-udpgw
-screen -AmdS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300
+screen -AmdS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7200
 
 # SSH Configuration
 cd
@@ -113,8 +103,12 @@ wget -O /etc/squid3/squid.conf "https://raw.githubusercontent.com/Dreyannz/AutoS
 sed -i $MYIP2 /etc/squid3/squid.conf;
 service squid3 restart
 
+
 # Install WebMin
 cd
+sudo apt install software-properties-common apt-transport-https wget
+wget -q http://www.webmin.com/jcameron-key.asc -O- | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] http://download.webmin.com/download/repository sarge contrib"
 apt-get -y install webmin
 sed -i 's/ssl=1/ssl=0/g' /etc/webmin/miniserv.conf
 service webmin restart
@@ -143,7 +137,7 @@ rm -rf ddos-deflate-master.zip
 
 # Banner
 rm /etc/issue.net
-wget -O /etc/issue.net "https://raw.githubusercontent.com/Dreyannz/AutoScriptVPS/master/Files/Others/issue.net"
+wget -O /etc/issue.net "https://raw.githubusercontent.com/kangdaqiq/debian/master/issue.net"
 sed -i 's@#Banner@Banner@g' /etc/ssh/sshd_config
 sed -i 's@DROPBEAR_BANNER=""@DROPBEAR_BANNER="/etc/issue.net"@g' /etc/default/dropbear
 service ssh restart
