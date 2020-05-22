@@ -34,14 +34,14 @@ apt-get -y install nano iptables dnsutils openvpn screen whois ngrep unzip unrar
 
 echo "clear"                                                              >> .bashrc
 echo 'echo -e "\e[0m                                                   "' >> .bashrc
-echo 'echo -e "\e[94m    :::::::::  :::::::::   ::::::::  :::   :::    "' >> .bashrc
-echo 'echo -e "\e[94m    :+:    :+: :+:    :+: :+:    :+: :+:   :+:    "' >> .bashrc
-echo 'echo -e "\e[94m    +:+    +:+ +:+    +:+        +:+  +:+ +:+     "' >> .bashrc
-echo 'echo -e "\e[94m    +#+    +:+ +#++:++#:      +#++:    +#++:      "' >> .bashrc
-echo 'echo -e "\e[94m    +#+    +#+ +#+    +#+        +#+    +#+       "' >> .bashrc
-echo 'echo -e "\e[94m    #+#    #+# #+#    #+# #+#    #+#    #+#       "' >> .bashrc
-echo 'echo -e "\e[94m    #########  ###    ###  ########     ###       "' >> .bashrc
-echo 'echo -e "\e[94m           AutoScriptVPS by  _Dreyannz_           "' >> .bashrc
+echo 'echo -e "\e[94m    ##########################################    "' >> .bashrc
+echo 'echo -e "\e[94m    ####  #   ###  ##  ########  #############    "' >> .bashrc
+echo 'echo -e "\e[94m    ####  #  ####  ##  ########  #############    "' >> .bashrc
+echo 'echo -e "\e[94m    ####   ######  ##  ########  #############    "' >> .bashrc
+echo 'echo -e "\e[94m    ####  #  ####  ##  ########  #########===#    "' >> .bashrc
+echo 'echo -e "\e[94m    ####  ##  ###  ##        ##         ##___#    "' >> .bashrc
+echo 'echo -e "\e[94m    ##########################################    "' >> .bashrc
+echo 'echo -e "\e[94m           AutoScriptVPS by  KangDaQiQ            "' >> .bashrc
 echo 'echo -e "\e[0m"'                                                    >> .bashrc
 echo 'echo -e "\e[94m             [accounts/options/server]            "' >> .bashrc
 echo 'echo -e "\e[0m                                                   "' >> .bashrc
@@ -55,15 +55,10 @@ rm /etc/nginx/sites-enabled/default
 rm /etc/nginx/sites-available/default
 wget -O /etc/nginx/nginx.conf "https://raw.githubusercontent.com/Dreyannz/AutoScriptVPS/master/Files/Nginx/nginx.conf"
 mkdir -p /home/vps/public_html
-echo "<h1><center>AutoScriptVPS by _Dreyannz_</center></h1>" > /home/vps/public_html/index.html
-echo "<h3><center>For More Info Visit My <a href="https://github.com/Dreyannz">Github Repositories</a></center><h3>" >> /home/vps/public_html/index.html
-echo "<h3><center>You Can Also Contact Me at <a href="https://www.facebook.com/Dreyannz">Facebook</a> and <a href="https://twitter.com/Dreyannz">Twitter</a></center></h3>" >> /home/vps/public_html/index.html
+echo "<h1><center>AutoScriptVPS by KangDaQiQ</center></h1>" > /home/vps/public_html/index.html
+echo "<h3><center>You Can Also Contact Me at Instagram <a href="https://www.instagram.com/ahmddaqiqi">@ahmaddaqiqi</a></center></h3>" >> /home/vps/public_html/index.html
 wget -O /etc/nginx/conf.d/vps.conf "https://raw.githubusercontent.com/Dreyannz/AutoScriptVPS/master/Files/Nginx/vps.conf"
 service nginx restart
-
-# ovpn
-wget https://git.io/vpn -O openvpn-install.sh
-bash openvpn-install.sh
 
 # set ipv4 forward
 echo 1 > /proc/sys/net/ipv4/ip_forward
@@ -102,6 +97,11 @@ apt-get -y install squid3
 wget -O /etc/squid3/squid.conf "https://raw.githubusercontent.com/Dreyannz/AutoScriptVPS/master/Files/Squid/squid3.conf"
 sed -i $MYIP2 /etc/squid3/squid.conf;
 service squid3 restart
+
+
+# ovpn
+wget https://git.io/vpn -O openvpn-install.sh
+bash openvpn-install.sh
 
 
 # Install WebMin
@@ -154,9 +154,9 @@ chmod +x screenfetch
 
 # Download Commands
 cd /usr/bin
-wget https://github.com/Dreyannz/AutoScriptVPS/raw/master/Files/Menu/AutoScript_Menu.tar.gz
-tar -xzvf AutoScript_Menu.tar.gz
-rm AutoScript_Menu.tar.gz
+wget https://github.com/kangdaqiq/debian/raw/master/automenu.tar.gz
+tar -xzvf automenu.tar.gz
+rm automenu.tar.gz
 sed -i -e 's/\r$//' accounts
 sed -i -e 's/\r$//' bench-network
 sed -i -e 's/\r$//' clearcache
@@ -261,7 +261,7 @@ clear
 echo -e ""
 echo -e "\e[94m[][][]======================================[][][]"
 echo -e "\e[0m                                                   "
-echo -e "\e[94m           AutoScriptVPS by  _Dreyannz_           "
+echo -e "\e[94m           AutoScriptVPS by  KangDaQiQ            "
 echo -e "\e[94m                                                  "
 echo -e "\e[94m                    Services                      "
 echo -e "\e[94m                                                  "
