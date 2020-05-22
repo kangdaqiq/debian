@@ -1,6 +1,5 @@
 #!/bin/bash
-# Original script by : fornesia, rzengineer and fawzya
-# Modified by : _Dreyannz_
+
 # ==================================================
 # Initializing Var
 export DEBIAN_FRONTEND=noninteractive
