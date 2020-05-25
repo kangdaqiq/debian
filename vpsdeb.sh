@@ -1,5 +1,6 @@
 #!/bin/bash
-
+# Original script by : fornesia, rzengineer and fawzya
+# Modified by : _Dreyannz_
 # ==================================================
 # Initializing Var
 export DEBIAN_FRONTEND=noninteractive
@@ -11,6 +12,149 @@ MYIP2="s/xxxxxxxxx/$MYIP/g";
 # Root Directory
 cd
 
+# Disable IPV6
+echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
+sed -i '$ i\echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6' /etc/rc.local
+
+# Install wget and curl
+apt-get update;apt-get -y install wget curl;
+
+# Local Time Manila
+ln -fs /usr/share/zoneinfo/Asia/Manila /etc/localtime
+
+# Local Configuration
+sed -i 's/AcceptEnv/#AcceptEnv/g' /etc/ssh/sshd_config
+service ssh restart
+
+# Update
+apt-get update
+
+# Install Essential Packages
+apt-get -y install nano iptables dnsutils openvpn screen whois ngrep unzip unrar
+
+echo "clear"                                                              >> .bashrc
+echo 'echo -e "\e[0m                                                   "' >> .bashrc
+echo 'echo -e "\e[94m    :::::::::  :::::::::   ::::::::  :::   :::    "' >> .bashrc
+echo 'echo -e "\e[94m    :+:    :+: :+:    :+: :+:    :+: :+:   :+:    "' >> .bashrc
+echo 'echo -e "\e[94m    +:+    +:+ +:+    +:+        +:+  +:+ +:+     "' >> .bashrc
+echo 'echo -e "\e[94m    +#+    +:+ +#++:++#:      +#++:    +#++:      "' >> .bashrc
+echo 'echo -e "\e[94m    +#+    +#+ +#+    +#+        +#+    +#+       "' >> .bashrc
+echo 'echo -e "\e[94m    #+#    #+# #+#    #+# #+#    #+#    #+#       "' >> .bashrc
+echo 'echo -e "\e[94m    #########  ###    ###  ########     ###       "' >> .bashrc
+echo 'echo -e "\e[94m           AutoScriptVPS by  _Dreyannz_           "' >> .bashrc
+echo 'echo -e "\e[0m"'                                                    >> .bashrc
+echo 'echo -e "\e[94m             [accounts/options/server]            "' >> .bashrc
+echo 'echo -e "\e[0m                                                   "' >> .bashrc
+
+# Install WebServer
+apt-get -y install nginx
+
+# WebServer Configuration
+cd
+rm /etc/nginx/sites-enabled/default
+rm /etc/nginx/sites-available/default
+wget -O /etc/nginx/nginx.conf "https://raw.githubusercontent.com/Dreyannz/AutoScriptVPS/master/Files/Nginx/nginx.conf"
+mkdir -p /home/vps/public_html
+echo "<h1><center>AutoScriptVPS by _Dreyannz_</center></h1>" > /home/vps/public_html/index.html
+echo "<h3><center>For More Info Visit My <a href="https://github.com/Dreyannz">Github Repositories</a></center><h3>" >> /home/vps/public_html/index.html
+echo "<h3><center>You Can Also Contact Me at <a href="https://www.facebook.com/Dreyannz">Facebook</a> and <a href="https://twitter.com/Dreyannz">Twitter</a></center></h3>" >> /home/vps/public_html/index.html
+wget -O /etc/nginx/conf.d/vps.conf "https://raw.githubusercontent.com/Dreyannz/AutoScriptVPS/master/Files/Nginx/vps.conf"
+service nginx restart
+
+
+
+
+
+# Setting USW
+apt-get install ufw
+ufw allow ssh
+ufw allow 1194/tcp
+sed -i 's|DEFAULT_INPUT_POLICY="DROP"|DEFAULT_INPUT_POLICY="ACCEPT"|' /etc/default/ufw
+sed -i 's|DEFAULT_FORWARD_POLICY="DROP"|DEFAULT_FORWARD_POLICY="ACCEPT"|' /etc/default/ufw
+cd /etc/ufw/
+wget "https://raw.githubusercontent.com/Dreyannz/AutoScriptVPS/master/Files/OpenVPN/before.rules"
+cd
+ufw enable
+ufw status
+ufw disable
+
+# set ipv4 forward
+echo 1 > /proc/sys/net/ipv4/ip_forward
+sed -i 's|#net.ipv4.ip_forward=1|net.ipv4.ip_forward=1|' /etc/sysctl.conf
+
+# Install BadVPN
+cd
+wget -O /usr/bin/badvpn-udpgw "https://github.com/Dreyannz/AutoScriptVPS/raw/master/Files/BadVPN/badvpn-udpgw"
+if [ "$OS" == "x86_64" ]; then
+  wget -O /usr/bin/badvpn-udpgw "https://github.com/Dreyannz/AutoScriptVPS/raw/master/Files/BadVPN/badvpn-udpgw64"
+fi
+sed -i '$ i\screen -AmdS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300' /etc/rc.local
+chmod +x /usr/bin/badvpn-udpgw
+screen -AmdS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300
+
+# SSH Configuration
+cd
+sed -i '/Port 22/a Port 143' /etc/ssh/sshd_config
+sed -i '/Port 22/a Port  81' /etc/ssh/sshd_config
+sed -i 's/Port 22/Port  22/g' /etc/ssh/sshd_config
+service ssh restart
+
+# Install Dropbear
+apt-get -y install dropbear
+sed -i 's/NO_START=1/NO_START=0/g' /etc/default/dropbear
+sed -i 's/DROPBEAR_PORT=22/DROPBEAR_PORT=443/g' /etc/default/dropbear
+sed -i 's/DROPBEAR_EXTRA_ARGS=/DROPBEAR_EXTRA_ARGS="-p 82 -p 142"/g' /etc/default/dropbear
+echo "/bin/false" >> /etc/shells
+echo "/usr/sbin/nologin" >> /etc/shells
+service ssh restart
+service dropbear restart
+
+# Install Squid3
+cd
+apt-get -y install squid3
+wget -O /etc/squid3/squid.conf "https://raw.githubusercontent.com/Dreyannz/AutoScriptVPS/master/Files/Squid/squid3.conf"
+sed -i $MYIP2 /etc/squid3/squid.conf;
+service squid3 restart
+
+# Install WebMin
+cd
+apt-get -y install webmin
+sed -i 's/ssl=1/ssl=0/g' /etc/webmin/miniserv.conf
+service webmin restart
+
+# Install Stunnel
+apt-get -y install stunnel4
+wget -O /etc/stunnel/stunnel.pem "https://raw.githubusercontent.com/Dreyannz/AutoScriptVPS/master/Files/Stunnel/stunnel.pem"
+wget -O /etc/stunnel/stunnel.conf "https://raw.githubusercontent.com/Dreyannz/AutoScriptVPS/master/Files/Stunnel/stunnel.conf"
+sed -i $MYIP2 /etc/stunnel/stunnel.conf
+sed -i 's/ENABLED=0/ENABLED=1/g' /etc/default/stunnel4
+service stunnel4 restart
+
+# Install Fail2Ban
+apt-get -y install fail2ban;
+service fail2ban restart
+
+# Install DDOS Deflate
+cd
+apt-get -y install dnsutils dsniff
+wget "https://github.com/Dreyannz/AutoScriptVPS/raw/master/Files/Others/ddos-deflate-master.zip"
+unzip ddos-deflate-master.zip
+cd ddos-deflate-master
+./install.sh
+cd
+rm -rf ddos-deflate-master.zip
+
+# Banner
+rm /etc/issue.net
+wget -O /etc/issue.net "https://raw.githubusercontent.com/Dreyannz/AutoScriptVPS/master/Files/Others/issue.net"
+sed -i 's@#Banner@Banner@g' /etc/ssh/sshd_config
+sed -i 's@DROPBEAR_BANNER=""@DROPBEAR_BANNER="/etc/issue.net"@g' /etc/default/dropbear
+service ssh restart
+service dropbear restart
+
+# XML Parser
+cd
+apt-get -y --force-yes -f install libxml-parser-perl
 
 # Install Screenfetch
 apt-get -y install lsb-release scrot
@@ -19,9 +163,9 @@ chmod +x screenfetch
 
 # Download Commands
 cd /usr/bin
-wget https://github.com/kangdaqiq/debian/raw/master/automenu.tar.gz
-tar -xzvf automenu.tar.gz
-rm automenu.tar.gz
+wget https://github.com/Dreyannz/AutoScriptVPS/raw/master/Files/Menu/AutoScript_Menu.tar.gz
+tar -xzvf AutoScript_Menu.tar.gz
+rm AutoScript_Menu.tar.gz
 sed -i -e 's/\r$//' accounts
 sed -i -e 's/\r$//' bench-network
 sed -i -e 's/\r$//' clearcache
@@ -126,7 +270,7 @@ clear
 echo -e ""
 echo -e "\e[94m[][][]======================================[][][]"
 echo -e "\e[0m                                                   "
-echo -e "\e[94m           AutoScriptVPS by  KangDaQiQ            "
+echo -e "\e[94m           AutoScriptVPS by  _Dreyannz_           "
 echo -e "\e[94m                                                  "
 echo -e "\e[94m                    Services                      "
 echo -e "\e[94m                                                  "
